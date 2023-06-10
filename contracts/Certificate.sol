@@ -14,12 +14,16 @@ contract Certificate is ERC4671, Ownable {
 
     event TokenMinted(address indexed _holder, uint indexed _tokenId);
 
-    function createCertificate(address _holder, string memory _tokenUri) public onlyOwner {
+    function createCertificate(address _holder, string memory _tokenUri) external onlyOwner {
         _mint(_holder);
         holderToId[_holder] = emittedCount() - 1;
         setTokenURI(holderToId[_holder], _tokenUri);
         emit TokenMinted(_holder, holderToId[_holder]);
     }
 
+    function revoke(uint _tokenId) external onlyOwner {
+        super._revoke(_tokenId);
+    }
+ 
 
 }
