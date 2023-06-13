@@ -27,7 +27,7 @@ describe("Certificate SBT", function () {
     })
   });
 
-  describe("Minting and revoking", function () {
+  describe("Minting revoking, validating and UriStorage", function () {
     it("should update the holders balance after creating the certificate", async function () {
       await certificate.createCertificate(addr1.address, "asdf");
       expect(await certificate.balanceOf(addr1.address)).to.equal(1);
@@ -52,5 +52,21 @@ describe("Certificate SBT", function () {
       await certificate.createCertificate(addr1.address, "asdf");
       await expect(certificate.connect(addr2).revoke(0)).to.be.revertedWith("Ownable: caller is not the owner");
     });
+
+    it("should show the correct results for valid and unvalid certificates", async function() {
+      await certificate.createCertificate(addr1.address, "asdf");
+      await certificate.createCertificate(addr2.address, "dfgh");
+      await certificate.revoke(0);
+      expect(await certificate.isValid(0)).to.be.false;
+      expect(await certificate.isValid(1)).to.be.true;
+    });
+
+    it("should store the correct tokenUri for created certificates", async function() {
+      await certificate.createCertificate(addr1.address, "test");
+      expect(await certificate.tokenURI(0)).to.equal("test");
+    });
+
+
+
   })
 })
