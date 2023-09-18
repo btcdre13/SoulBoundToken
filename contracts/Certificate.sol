@@ -6,8 +6,11 @@ import "./ERC4671.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Certificate is ERC4671, Ownable {
-    constructor(string memory _certificateName, string memory _symbol) ERC4671(_certificateName, _symbol) {
 
+    address public owner;
+
+    constructor(string memory _certificateName, string memory _symbol) ERC4671(_certificateName, _symbol) {
+    owner = msg.sender;
     }
 
     mapping(address => uint) public holderToId;
